@@ -10,7 +10,6 @@ class Program
         string gess;
         int gesser;
 
-
         do
         {
             Console.WriteLine("What is your guess? ");
