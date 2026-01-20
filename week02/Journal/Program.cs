@@ -26,25 +26,25 @@ public class Program
             switch (Response)
             {
                 case 1:// for Write
-                break;
+                    break;
 
                 case 2:// for Display
-                break;
+                    break;
 
                 case 3:// for Load
-                break;
+                    break;
 
                 case 4:// for Save
-                break;
+                    break;
 
                 case 5:// for Quit
                     Console.WriteLine("See you tomorrow!");
-                break;
-            
+                    break;
+
 
                 default:
                     Console.WriteLine("Chosse another number from 1 to 5!");
-                break;
+                    break;
             }
 
         }
