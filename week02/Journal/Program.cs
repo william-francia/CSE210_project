@@ -51,9 +51,12 @@ public class Program
 
                 case 2:// for Display
 
-                    if (Neffi != null)
+                    if (Franz._entries.Count > 0)
                     {
-                        Neffi.Display();
+                        foreach (Entry entry in Franz._entries)
+                        {
+                            entry.Display();
+                        }
                     }
                     else
                     {
@@ -66,7 +69,6 @@ public class Program
                     Console.WriteLine("What is the file name?");
                     string loadFile = Console.ReadLine();
                     Franz.Load(loadFile);
-                    Console.WriteLine("Journal loaded successfully!");
                     break;
 
                 case 4:// for Save

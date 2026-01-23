@@ -36,14 +36,11 @@ public void Load(string filename)
     {
         string[] parts = line.Split("|");
 
-        string date = parts[0];
-        string prompt = parts[1];
-        string text = parts[2];
-
-        Entry entry = new Entry(date, prompt, text);
+        Entry entry = new Entry(parts[0], parts[1], parts[2]);
         _entries.Add(entry);
     }
 }
+
 
 
 
