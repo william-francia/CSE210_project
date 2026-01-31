@@ -19,26 +19,27 @@ class Scripture
         }
     }
     
-    public void HideRandomWords(int numberToHide)
+public void HideRandomWords(int numberToHide)
+{
+    Random rand = new Random();
+
+    List<Word> visibleWords = _words.Where(w => !w.IsHidden()).ToList();
+
+    if (visibleWords.Count == 0)
+        return;
+
+    for (int i = 0; i < numberToHide; i++)
     {
-        Random random = new Random();
+        visibleWords = _words.Where(w => !w.IsHidden()).ToList();
 
-        List<Word> visibleWords = _words.Where(w => !w.IsHidden()).ToList();
+        if (visibleWords.Count == 0)
+            break;
 
-        if (numberToHide > visibleWords.Count)
-        {
-            numberToHide = visibleWords.Count;
-        }
-
-        for (int i = 0; i < numberToHide; i++)
-        {
-            int index = random.Next(visibleWords.Count);
-
-            visibleWords[index].Hide();
-
-            visibleWords.RemoveAt(index);
-        }
+        int index = rand.Next(visibleWords.Count);
+        visibleWords[index].Hide();   
     }
+}
+
 
     public string GetDisplayText()
     {
@@ -68,6 +69,16 @@ class Scripture
 
         return true; 
     }
+    public string GetProgress()
+{
+    int total = _words.Count;
+    int hidden = _words.Count(w => w.IsHidden());
+
+    double percent = (hidden / (double)total) * 100;
+
+    return $"{percent:F0}% hidden";
+}
+
 }
 
 
