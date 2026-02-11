@@ -14,7 +14,7 @@ public void Run()
 
         while (DateTime.Now < endTime)
         {
-            Console.WriteLine("");
+            Console.WriteLine("...");
             Console.WriteLine("Breathe in...");
             ShowCountdown(4);
 
