@@ -3,7 +3,9 @@ using System.Configuration.Assemblies;
 using System.Diagnostics.Contracts;
 using System.Formats.Asn1;
 using System.Globalization;
+using System.Linq.Expressions;
 using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.Arm;
@@ -48,61 +50,129 @@ class Program
         //     Console.WriteLine("El número es negativo");
         // }
 
+        // StudentMelisa Melisa = new StudentMelisa("Belen", 26, 99); 
+        // Console.WriteLine(Melisa.GetInfo());
+        // Console.WriteLine(Melisa.GetData());
+
+        // Universitario William = new Universitario ("William", 22, "Bacheilor");
+        // Console.WriteLine(William.GetInfo());
+        // Console.WriteLine(William.GetGrade());
+
+        // List<Animal> RealList = new List<Animal>();
+        // RealList.Add(new Dog("Salame"));
+        // RealList.Add(new Cat("Cocorico"));
+
+        // foreach (Animal animal in RealList)
+        // {
+        //     animal.MakeSound();
+        // }   
 
 
-        StudentMelisa Melisa = new StudentMelisa("Belen", 26, 99); 
-        Console.WriteLine(Melisa.GetInfo());
-        Console.WriteLine(Melisa.GetData());
 
-        Universitario William = new Universitario ("William", 22, "Bacheilor");
-        Console.WriteLine(William.GetInfo());
-        Console.WriteLine(William.GetGrade());
 
+        List<Transport> transports = new List<Transport>();
+
+        transports.Add(new Car("VolksWagen", "Mile24"));
+        transports.Add(new Bike("Tracker", "4566"));
+        transports.Add(new Airplane("nose", "nose"));
+
+        foreach (Transport transport in transports)
+        {
+            transport.DisplayInfo();
+            transport.Move();
+        }
+
+        TestTransport(new Car("Honda", "Civic"));
+        TestTransport(new Bike("Trek", "FX3"));
+        TestTransport(new Airplane("Airbus", "A320"));
 
 
     }
-
-    class People
+    static void TestTransport(Transport t)
     {
-        private string _Name;
-        private int _age;
-    
-        public People (string name, int age)
-        {
-            _Name = name;
-            _age = age;
-        }
-        public string GetInfo()
-        {
-            return _Name + " " + _age;
-        }
-    }   
-    class StudentMelisa : People
-    {
-        private int _Notas;
-        public StudentMelisa (string name, int age, int notas) : base(name, age)
-        {
-            _Notas = notas;
-        }
-        public string GetData()
-        {
-            return GetInfo() + " " + _Notas;
-        }
-    }
-    class Universitario : People
-    {
-        private string _Grade;
-        public Universitario (string name, int age, string grade) : base (name, age)
-        {
-            _Grade = grade;
-        }
-        public string GetGrade()
-        {
-            return GetInfo() + " " + GetGrade();
-        }
+        t.Move();
     }
 
 
+    abstract class Transport
+    {
+        private string _brand { get; set; }
+        private string _model { get; set; }
+
+        public Transport(string brand, string model)
+        {
+            _brand = brand;
+            _model = model;
+        }
+        public abstract void Move();
+
+        public virtual void DisplayInfo()
+        {
+            Console.WriteLine($"Brand: {_brand}, Model: {_model}");
+        }
+    }
+    class Car : Transport
+    {
+        public Car(string brand, string model) : base(brand, model) { }
+
+        public override void Move()
+        {
+            Console.WriteLine("The car is driving on the road");
+        }
+        public override void DisplayInfo()
+        {
+            base.DisplayInfo();
+        }
+
+    }
+    class Bike : Transport
+    {
+        public Bike(string brand, string model) : base(brand, model)
+        { }
+
+        public override void Move()
+        {
+            Console.WriteLine("The bike is pedaling forward.");
+        }
+    }
+
+    class Airplane : Transport
+    {
+        public Airplane(string brand, string model) : base(brand, model)
+        { }
+
+        public override void Move()
+        {
+            Console.WriteLine("The airplane is flying through the sky.");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
 
 
 
@@ -136,6 +206,105 @@ class Program
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// class Animal
+// {
+//     private string _name;
+
+//     public Animal (string name)
+//     {
+//         _name = name; 
+//     }
+
+
+//     public virtual void MakeSound()
+//     {
+//         Console.WriteLine("Some animals sound");
+//     }
+// }
+
+
+// class Dog : Animal
+// {
+//     public Dog(string name) : base(name)
+//     {}
+
+//     public override void MakeSound()
+//     {
+//         base.MakeSound();
+//         Console.WriteLine("Guauf");
+//     }
+// }
+
+
+// class Cat : Animal
+// {
+//     public Cat(string name) : base(name)
+//     {}
+// }
+
+
+
+
+
+
+
+// class People
+// {
+//     private string _Name;
+//     private int _age;
+
+//     public People (string name, int age)
+//     {
+//         _Name = name;
+//         _age = age;
+//     }
+//     public string GetInfo()
+//     {
+//         return _Name + " " + _age;
+//     }
+// }   
+// class StudentMelisa : People
+// {
+//     private int _Notas;
+//     public StudentMelisa (string name, int age, int notas) : base(name, age)
+//     {
+//         _Notas = notas;
+//     }
+//     public string GetData()
+//     {
+//         return GetInfo() + " " + _Notas;
+//     }
+// }
+// class Universitario : People
+// {
+//     private string _Grade;
+//     public Universitario (string name, int age, string grade) : base (name, age)
+//     {
+//         _Grade = grade;
+//     }
+//     public string GetGrade()
+//     {
+//         return GetInfo() + " " + GetGrade();
+//     }
+// }
 
 
 //     static double Alltotal(int ProductPrice, int Categori)
@@ -160,38 +329,6 @@ class Program
 //         }
 
 //     }
-
-
- }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
