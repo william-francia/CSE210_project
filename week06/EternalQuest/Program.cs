@@ -29,12 +29,16 @@ class Program
                     CreateNewGoal(goals);
                     break;
                 case "2":
+                    ListGoals(goals);
                     break;
                 case "3":
+                    SaveGoals(goals, totalPoints);
                     break;
                 case "4":
+                    LoadGoals(goals, ref totalPoints);
                     break;
                 case "5":
+                    RecordEvent(goals, ref totalPoints);
                     break;
                 case "6":
                     Console.WriteLine("Good bye");
@@ -118,49 +122,115 @@ class Program
         }
     }
     static void RecordEvent(List<Goal> goals, ref int totalPoints)
-{
-    if (goals.Count == 0)
     {
-        Console.WriteLine("No goals available to record.");
-        return;
-    }
-
-    Console.WriteLine("The goals are:");
-
-    int index = 1;
-    foreach (Goal goal in goals)
-    {
-        Console.WriteLine($"{index}. {goal.GetDetailsString()}");
-        index++;
-    }
-
-    Console.Write("Which goal did you accomplish? ");
-    int choice = int.Parse(Console.ReadLine());
-    choice--; // Convert to index
-
-    if (choice < 0 || choice >= goals.Count)
-    {
-        Console.WriteLine("Invalid goal selection.");
-        return;
-    }
-
-    Goal selectedGoal = goals[choice];
-
-    selectedGoal.RecordEvent();
-
-    totalPoints += selectedGoal.Points;
-
-    if (selectedGoal is ChecklistGoal checklist)
-    {
-        if (checklist.IsComplete())
+        if (goals.Count == 0)
         {
-            Console.WriteLine("Congratulations! You completed a checklist goal!");
-
-            totalPoints += checklist.BonusPoints;
+            Console.WriteLine("No goals available to record.");
+            return;
         }
+
+        Console.WriteLine("The goals are:");
+
+        int index = 1;
+        foreach (Goal goal in goals)
+        {
+            Console.WriteLine($"{index}. {goal.GetDetailsString()}");
+            index++;
+        }
+
+        Console.Write("Which goal did you accomplish? ");
+        int choice = int.Parse(Console.ReadLine());
+        choice--; // Convert to index
+
+        if (choice < 0 || choice >= goals.Count)
+        {
+            Console.WriteLine("Invalid goal selection.");
+            return;
+        }
+
+        Goal selectedGoal = goals[choice];
+
+        selectedGoal.RecordEvent();
+
+        totalPoints += selectedGoal.Points;
+
+        if (selectedGoal is ChecklistGoal checklist)
+        {
+            if (checklist.IsComplete())
+            {
+                Console.WriteLine("Congratulations! You completed a checklist goal!");
+
+                totalPoints += checklist.BonusPoints;
+            }
+        }
+
+        Console.WriteLine($"\nEvent recorded! You now have {totalPoints} points.");
+    }
+    static void SaveGoals(List<Goal> goals, int totalPoints)
+    {
+        Console.Write("What is the filename for the goal file? ");
+        string filename = Console.ReadLine();
+
+        using (StreamWriter outputFile = new StreamWriter(filename))
+        {
+            outputFile.WriteLine(totalPoints);
+
+            foreach (Goal goal in goals)
+            {
+                outputFile.WriteLine(goal.GetStringRepresentation());
+            }
+        }
+
+        Console.WriteLine("Goals saved successfully!");
+    }
+    static void LoadGoals(List<Goal> goals, ref int totalPoints)
+    {
+        Console.Write("What is the filename for the goal file? ");
+        string filename = Console.ReadLine();
+
+        if (!File.Exists(filename))
+        {
+            Console.WriteLine("File not found.");
+            return;
+        }
+
+        string[] lines = File.ReadAllLines(filename);
+
+        goals.Clear(); 
+
+        totalPoints = int.Parse(lines[0]);
+
+        for (int i = 1; i < lines.Length; i++)
+        {
+            string line = lines[i];
+
+            string[] parts = line.Split(": ");
+            string type = parts[0];
+
+            string[] data = parts[1].Split("|");
+
+            if (type == "SimpleGoal")
+            {
+                goals.Add(new SimpleGoal(data[0], data[1], int.Parse(data[2])));
+            }
+            else if (type == "EternalGoal")
+            {
+                goals.Add(new EternalGoal(data[0], data[1], int.Parse(data[2])));
+            }
+            else if (type == "ChecklistGoal")
+            {
+                goals.Add(new ChecklistGoal(
+                    data[0],
+                    data[1],
+                    int.Parse(data[2]),
+                    int.Parse(data[3]),
+                    int.Parse(data[4])
+                ));
+            }
+        }
+
+        Console.WriteLine("Goals loaded successfully!");
     }
 
-    Console.WriteLine($"\nEvent recorded! You now have {totalPoints} points.");
-}
 
 }
