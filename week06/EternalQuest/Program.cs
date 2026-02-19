@@ -121,51 +121,60 @@ class Program
             index++;
         }
     }
+    
     static void RecordEvent(List<Goal> goals, ref int totalPoints)
+{
+    if (goals.Count == 0)
     {
-        if (goals.Count == 0)
-        {
-            Console.WriteLine("No goals available to record.");
-            return;
-        }
-
-        Console.WriteLine("The goals are:");
-
-        int index = 1;
-        foreach (Goal goal in goals)
-        {
-            Console.WriteLine($"{index}. {goal.GetDetailsString()}");
-            index++;
-        }
-
-        Console.Write("Which goal did you accomplish? ");
-        int choice = int.Parse(Console.ReadLine());
-        choice--; // Convert to index
-
-        if (choice < 0 || choice >= goals.Count)
-        {
-            Console.WriteLine("Invalid goal selection.");
-            return;
-        }
-
-        Goal selectedGoal = goals[choice];
-
-        selectedGoal.RecordEvent();
-
-        totalPoints += selectedGoal.Points;
-
-        if (selectedGoal is ChecklistGoal checklist)
-        {
-            if (checklist.IsComplete())
-            {
-                Console.WriteLine("Congratulations! You completed a checklist goal!");
-
-                totalPoints += checklist.BonusPoints;
-            }
-        }
-
-        Console.WriteLine($"\nEvent recorded! You now have {totalPoints} points.");
+        Console.WriteLine("No goals available to record.");
+        return;
     }
+
+    Console.WriteLine("The goals are:\n");
+
+    int index = 1;
+    foreach (Goal goal in goals)
+    {
+        Console.WriteLine($"{index}. {goal.GetDetailsString()}");
+        index++;
+    }
+
+    Console.Write("\nWhich goal did you accomplish? ");
+    int choice = int.Parse(Console.ReadLine());
+    choice--;
+
+    if (choice < 0 || choice >= goals.Count)
+    {
+        Console.WriteLine("Invalid goal selection.");
+        return;
+    }
+
+    Goal selectedGoal = goals[choice];
+
+    // Registrar evento
+    selectedGoal.RecordEvent();
+
+    // Sumar puntos base
+    totalPoints += selectedGoal.Points;
+
+    Console.WriteLine($"\nCongratulations you have earned {selectedGoal.Points} points!");
+
+    // Si es checklist y lo completó → sumar bonus
+    if (selectedGoal is ChecklistGoal checklist)
+    {
+        if (checklist.IsComplete())
+        {
+            Console.WriteLine("Bonus achieved!");
+            totalPoints += checklist.BonusPoints;
+        }
+    }
+
+    Console.WriteLine($"You now have {totalPoints} points!");
+    Console.WriteLine($"You have {totalPoints} points.");
+}
+
+
+
     static void SaveGoals(List<Goal> goals, int totalPoints)
     {
         Console.Write("What is the filename for the goal file? ");
