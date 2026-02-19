@@ -1,0 +1,2 @@
+0
+SimpleGoal: levantarem temprano |despertar a las 7 am o antes.|10|False
