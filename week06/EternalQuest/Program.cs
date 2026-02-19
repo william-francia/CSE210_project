@@ -20,7 +20,7 @@ class Program
             Console.WriteLine("5. Record Event");
             Console.WriteLine("6. Quit");
             Console.WriteLine("Select a choice from the menu:");
-            string choise = Console.ReadLine();
+            choice = Console.ReadLine();
             Console.WriteLine();
 
             switch (choice)
